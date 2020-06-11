@@ -1,67 +1,90 @@
-# FFmpegUniversal
-
-Merged FFmpeg dynamic linked library for the Windows Universal Platform.
-
-## The structure of the `FFmpegUniversal` folder
-
-    FFmpegUniversal\                      - The Root Folder
-      FFmpeg\                             - Git Submodule of FFmpeg source code
-                                            from the latest stable release in 
-                                            git://github.com/FFmpeg/FFmpeg.git
-      FFmpegUniversal\                    - FFmpegUniversal Generate WinRT DLL 
-                                            Project
-        BuildFFmpeg.sh                    - Internal script for compiling 
-                                            FFmpeg
-        BuildFFmpegUniversalInternal.bat  - Internal script for compiling 
-                                            FFmpegUniversal
-        FFmpegUniversal.rc                - FFmpegUniversal Version Info 
-                                            Resource Definition
-        Version.h                         - FFmpegUniversal Version Definition
-      Output\                             - Output Folder
-        FFmpeg\                           - Temporary files of FFmpegUniversal 
-                                            compilation (Compiled binaries of 
-                                            FFmpeg)
-        FFmpeg_Temp\                      - Temporary files of FFmpegUniversal 
-                                            compilation (Temporary files of 
-                                            FFmpeg compilation)        
-        FFmpegUniversal\                  - *FFmpegUniversal Compiled binaries*
-          { ARM, ARM64, x64, x86 }\       - Platform Folder
-            Include\                      - The header files for using 
-                                            FFmpegUniversal
-            Lib\                          - The library files for linking 
-                                            FFmpegUniversal
-            Redist\                       - The binary files of FFmpegUniversal
-        FFmpegUniversal_Temp\             - Temporary files of FFmpegUniversal 
-                                            compilation
-      .gitignore                          - Git ignore definition file
-      .gitmodules                         - Git submodule definition file
-      BuildFFmpegUniversal.bat            - *The script for compiling 
-                                            FFmpegUniversal*
-      LICENSE                             - The License file
-      README.md                           - This document
+FFmpeg Libs for Hololens2
+=========
+- forked from https://github.com/M2Team/FFmpegUniversal
 
 
-## How to compile
+### Basics
+- Hololens2 runs on UWP(Universal Windows Platform, or Windows Store standard)
+- ffmpeg libs can be compiled against UWP x64 to work on Hololens2
+- This repo used Msys2 and VS2019 to compile
+- ffmpeg is free to use(LGPL license) but x264 is not
 
-You can follow the instructions on how to 
-[build FFmpeg for WinRT](https://trac.ffmpeg.org/wiki/CompilationGuide/WinRT) 
-apps. Follow the setup instruction carefuly to avoid build issues. After 
-completing the setup as instructed, you can invoke `BuildFFmpegUniversal.bat` 
-script to build or do it manually using the instructions in the compilation 
-guide after you modify the MSYS2_BIN variable in the 
-`BuildFFmpegUniversal.bat`.
+### Prebuilt
+- UWP x64 was compiled and tested with Hololens2 (vs2019 and Emulator)
+	- [Shared .lib and .dll](https://www.jianguoyun.com/p/DRYo_2EQ8b6SBhi496ED)
+	- [Static .a](https://www.jianguoyun.com/p/DSg71E4Q8b6SBhi896ED)
 
-    BuildFFmpegUniversal.bat    - *The script for compiling FFmpegUniversal*
+- PS: Windows10 Home Edition doesn't support Hololens2 Emulator (Tested)
 
-If you use the build script or follow the Wiki instructions as is you will get
-the merged FFmpeg dynamic library for the Windows Universal Platform and you 
-should find the appropriate builds of FFmpegUniversal libraries in the 
-`Output\FFmpegUniversal` folders. 
+### Compile
+#### 1. Install vs2019
+- Enable C++
+- Enable Universal Windows Platform
 
-Finally, enjoy it.
+#### 2. Setup Msys2
+- Download and install [Msys2](https://www.msys2.org/). [Download exe](https://github.com/msys2/msys2-installer/releases/download/2020-06-02/msys2-x86_64-20200602.exe)
+- **[Important]** Edit msys2_shell.cmd to remove `rem` before `set MSYS2_PATH_TYPE=inherit`. So that msys cmd will inherit path when called.
+- In cmd.exe, open x64 version of Msys2, and install tools
+	````
+	// In cmd.exe
+	"C:\msys64\msys2_shell.cmd" -mingw64
+	
+	// In shell
+	pacman -S mingw-w64-x86_64-toolchain nasm
+	// Press return to select ALL
+	````
 
-## License
-Same as the FFmpeg, the default setting of FFmpeg compilation in FFmpegUniversal 
-is distributed under the [LGPL version 2.1 or later](LICENSE).
+#### 3. Confirm Compile Tools
+- In cmd.exe, call vs2019's compile prompt tool `vcvarsall.bat`. For example:
+	````
+	// In cmd.exe
+	"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64 uwp
+	// vs environment will be setup
 
-### M2-Team
+	// call shell
+	"C:\msys64\msys2_shell.cmd" -mingw64 --login
+
+	// In shell
+	which cl link nasm cpp
+	// all should be found
+	// cl and link should come from vs2019
+	
+	````
+	![](https://raw.githubusercontent.com/initialneil/FFmpeg-Hololens2/master/img-01-shell.png)
+
+	
+#### 4. Compile
+- Edit `MSYS2_SHELL` in `BuildFFmpegUniversal.bat`, for example:
+	````
+	set MSYS2_SHELL=C:\msys64\msys2_shell.cmd
+	````
+- Open cmd.exe, goto this repo, run `BuildFFmpegUniversal.bat`
+	![](https://raw.githubusercontent.com/initialneil/FFmpeg-Hololens2/master/img-02-compile.png)
+
+- FYI:
+	- `BuildFFmpegUniversal.bat` calls `FFmpegUniversal\BuildFFmpegUniversalInternal.bat`, which setup vs2019, call shell and runs `BuildFFmpeg.sh`.
+	- If something fails in the middle, you can setup vs2019 and run BuildFFmpeg.sh in you own cmd.exe and shell (Section 5).
+	- The old versions setup folder in FFmpeg (for example Output/Windows10/x64) and run `../../../../FFmpeg/configure`. It somehow generate 'src/libavdevice/alldevices.c` not found error. So I run `./configure` directly from FFmpeg's root folder.
+
+#### 5. Compile step by step (if Section 4 failed)
+- In cmd.exe, enable vs2019
+	````
+	"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64 uwp
+	````
+- call shell
+	````
+	"C:\msys64\msys2_shell.cmd" -mingw64 --login
+	````
+- run build.sh
+	````
+	// static
+	./FFmpegUniversal/BuildFFmpeg.sh Static x64
+	// or shared
+	./FFmpegUniversal/BuildFFmpeg.sh Shared x64
+	````
+
+### Reference
+- https://github.com/M2Team/FFmpegUniversal
+- https://www.jianshu.com/p/5f175dec9109
+- https://github.com/microsoft/FFmpegInterop
+- https://github.com/ffmpeginteropx/FFmpegInteropX

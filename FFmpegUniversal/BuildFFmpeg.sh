@@ -27,11 +27,8 @@ fi
 
 pushd $DIR/../FFmpeg
 echo "=== CONFIGURING ==="
-rm -rf ../Output/FFmpeg/$1/$2
-rm -rf ../Output/FFmpeg_Temp/$1/$2
-mkdir -p ../Output/FFmpeg_Temp/$1/$2
-cd ../Output/FFmpeg_Temp/$1/$2
-../../../../FFmpeg/configure \
+cd ../FFmpeg
+./configure \
 	--toolchain=msvc \
 	--disable-programs \
 	--enable-cross-compile \
@@ -46,7 +43,7 @@ cd ../Output/FFmpeg_Temp/$1/$2
 	--extra-cflags=-MD \
 	--extra-cxxflags=-MD \
 	$OPTIONS \
-	--prefix=../../../../Output/FFmpeg/$1/$2
+	--prefix=./build/$1/$2
 echo "=== BUILDING ==="
 make -j12
 echo "=== INSTALLING ==="
