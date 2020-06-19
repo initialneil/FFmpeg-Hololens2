@@ -45,10 +45,11 @@ cd ../FFmpeg
 	$OPTIONS \
 	--prefix=./build/$1/$2
 echo "=== BUILDING ==="
+make clean
 make -j12
 echo "=== INSTALLING ==="
 make install
 
 popd
 
-exit 0
+read -p "Press any key to exit ..."

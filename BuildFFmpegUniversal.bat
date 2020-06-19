@@ -17,8 +17,8 @@ set MSYS2_BIN="%MSYS2_SHELL%" -mingw64
 rd /s /q "%~dp0Output"
 
 REM call "%~dp0FFmpegUniversal\BuildFFmpegUniversalInternal.bat" x86
-call "%~dp0FFmpegUniversal\BuildFFmpegUniversalInternal.bat" x64
+REM call "%~dp0FFmpegUniversal\BuildFFmpegUniversalInternal.bat" x64
 REM call "%~dp0FFmpegUniversal\BuildFFmpegUniversalInternal.bat" ARM
-REM call "%~dp0FFmpegUniversal\BuildFFmpegUniversalInternal.bat" ARM64
+call "%~dp0FFmpegUniversal\BuildFFmpegUniversalInternal.bat" ARM64
 
 REM @endlocal

@@ -4,15 +4,17 @@ FFmpeg Libs for Hololens2
 
 
 ### Basics
-- Hololens2 runs on UWP(Universal Windows Platform, or Windows Store standard)
-- ffmpeg libs can be compiled against UWP x64 to work on Hololens2
+- Hololens2 runs on UWP(Universal Windows Platform, or Windows Store standard) ARM64
+- ffmpeg libs can be compiled against UWP ARM64 for Hololens2, and x64 for Hololens2 Emulator
 - This repo used Msys2 and VS2019 to compile
 - ffmpeg is free to use(LGPL license) but x264 is not
 
 ### Prebuilt
-- UWP x64 was compiled and tested with Hololens2 (vs2019 and Emulator)
-	- [Shared .lib and .dll](https://www.jianguoyun.com/p/DRYo_2EQ8b6SBhi496ED)
-	- [Static .a](https://www.jianguoyun.com/p/DSg71E4Q8b6SBhi896ED)
+- UWP x64/ARM64/ARM was compiled with vs2019
+	- [ARM64 Static .a](https://www.jianguoyun.com/p/Ddxq45kQ8b6SBhjs6aQD) Recommended for Hololens2
+	- [x64 Shared .lib and .dll](https://www.jianguoyun.com/p/DRYo_2EQ8b6SBhi496ED)
+	- [x64 Static .a](https://www.jianguoyun.com/p/DSg71E4Q8b6SBhi896ED) Recommended for Hololens2 Emulator
+	- [ARM Static .a](https://www.jianguoyun.com/p/DeQ39C4Q8b6SBhjw6aQD) Recommended for Hololens1 (not tested)
 
 - PS: Windows10 Home Edition doesn't support Hololens2 Emulator (Tested)
 
@@ -77,9 +79,9 @@ FFmpeg Libs for Hololens2
 	````
 - run build.sh
 	````
-	// static
-	./FFmpegUniversal/BuildFFmpeg.sh Static x64
-	// or shared
+	// static ARM64
+	./FFmpegUniversal/BuildFFmpeg.sh Static ARM64
+	// or shared x64
 	./FFmpegUniversal/BuildFFmpeg.sh Shared x64
 	````
 
